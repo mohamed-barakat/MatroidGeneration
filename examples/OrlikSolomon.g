@@ -369,15 +369,20 @@ end );
 
 
 ## Test:
-A4 := BraidArrangement( 4 );
-n := Length( GroundSet( A4 ) );
-rkA4 := RankFunction( A4 );
-muA4 := MoebiusFunction( A4 );
-WA4 := AutomorphismGroup( A4 );
+r := 3;
+L := BraidArrangement( r );
+n := Length( GroundSet( L ) );
+Assert( 0, n = Binomial( r + 1, 2 ) );
+rkL := RankFunction( L );
+muL := MoebiusFunction( L );
+W := AutomorphismGroup( L );
+Display( CharacterTable( W ) );
 
-Assert( 0, ForAll( Concatenation( Flats( A4 ) ), X -> Dimension( OrlikSolomonSpaceOfFlat( A4, X ) ) = AbsInt( muA4( X ) ) ) );
-Assert( 0, ForAll( Concatenation( Flats( A4 ) ), X -> Dimension( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( A4, A4, X, GroundSet( A4 ) ) ) ) = AbsInt( muA4( X ) ) ) );
+Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> Dimension( OrlikSolomonSpaceOfFlat( L, X ) ) = AbsInt( muL( X ) ) ) );
+Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> Dimension( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, X, GroundSet( L ) ) ) ) = AbsInt( muL( X ) ) ) );
 
-OrbsA4 := SortedList( Orbits( WA4, Concatenation( Flats( A4 ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
-TA4 := List( OrbsA4, O -> O[1] );
-StabsA4 := List( TA4, X -> Stabilizer( WA4, X, OnSets ) );
+OrbsL := SortedList( Orbits( W, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
+TL := List( OrbsL, O -> O[1] );
+StabsL := List( TL, X -> Stabilizer( W, X, OnSets ) );
+WsL := List( [ 1 .. Length( TL ) ], k -> Group( List( GeneratorsOfGroup( StabsL[k] ), pi -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, TL[k], ListPerm( pi, n ) ) ) ) ) ) );
+IndsL := List( [ 1 .. Length( TL ) ], k -> List( ConstituentsOfCharacter( InducedClassFunction( RestrictedClassFunction( NaturalCharacter( WsL[k] ), GroupHomomorphismByImages( StabsL[k], WsL[k] ) ), W ) ), ValuesOfClassFunction ) );
