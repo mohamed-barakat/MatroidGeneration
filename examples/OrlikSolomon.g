@@ -2,15 +2,19 @@ LoadPackage( "alcove", ">= 2023.09-02" );
 LoadPackage( "LinearAlgebraForCAP" );
 LoadPackage( "FinSetsForCAP" );
 
-Q := HomalgFieldOfRationals( );
+ZZ := HomalgRingOfIntegers( );
+QQ := HomalgFieldOfRationals( );
 
-Qmat := MatrixCategory( Q );
+Zmat := CategoryOfRows( ZZ );
+Qmat := MatrixCategory( QQ );
+
+kmat := Qmat;
 
 BooleanArrangement :=
   function( r )
     local id;
     
-    id := HomalgIdentityMatrix( r, Q );
+    id := HomalgIdentityMatrix( r, QQ );
     
     return Matroid( id );
     
@@ -20,9 +24,9 @@ BraidArrangement :=
   function( r )
     local id, z, j, pair;
     
-    id := HomalgIdentityMatrix( r, Q );
+    id := HomalgIdentityMatrix( r, QQ );
     
-    z := HomalgInitialMatrix( r, Binomial( r, 2 ), Q );
+    z := HomalgInitialMatrix( r, Binomial( r, 2 ), QQ );
     
     j := 1;
     
@@ -166,7 +170,7 @@ InstallMethodWithCache( OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenOb
     
     if k = fail then
         
-        return ZeroMorphism( Qmat,
+        return ZeroMorphism( kmat,
                        A_X,
                        A_S );
         
@@ -174,8 +178,8 @@ InstallMethodWithCache( OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenOb
     
     A_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X );
     
-    return ComponentOfMorphismIntoDirectSum( Qmat,
-                   OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( matroid, X, DirectSum( Qmat, A_Ss ) ),
+    return ComponentOfMorphismIntoDirectSum( kmat,
+                   OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( matroid, X, DirectSum( kmat, A_Ss ) ),
                    A_Ss,
                    k );
     
@@ -200,7 +204,7 @@ InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalizationWithGi
     A_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X );
     A_Ts := OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X );
     
-    return MorphismBetweenDirectSumsWithGivenDirectSums( Qmat,
+    return MorphismBetweenDirectSumsWithGivenDirectSums( kmat,
                    A_S,
                    A_Ss,
                    List( [ 1 .. Length( Ss ) ], s ->
@@ -218,8 +222,8 @@ InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalization,
   function( matroid, X )
     
     return OrlikSolomonLastButOneCodifferentialOfLocalizationWithGivenObjects( matroid, X,
-                   DirectSum( Qmat, OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X ) ),
-                   DirectSum( Qmat, OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X ) ) );
+                   DirectSum( kmat, OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X ) ),
+                   DirectSum( kmat, OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X ) ) );
     
 end );
 
@@ -233,14 +237,14 @@ InstallMethodWithCache( OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange,
     rkX := RankFunction( matroid )( X );
     
     if rkX = 0 then
-        return UniversalMorphismIntoZeroObject( Qmat, TensorUnit( Qmat ) );
+        return UniversalMorphismIntoZeroObject( kmat, TensorUnit( kmat ) );
     elif rkX = 1 then
-        return IdentityMorphism( Qmat, TensorUnit( Qmat ) );
+        return IdentityMorphism( kmat, TensorUnit( kmat ) );
     fi;
     
-    A_T := DirectSum( Qmat, OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X ) );
+    A_T := DirectSum( kmat, OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X ) );
     
-    return KernelEmbedding( Qmat,
+    return WeakKernelEmbedding( kmat,
                    OrlikSolomonLastButOneCodifferentialOfLocalizationWithGivenObjects( matroid, X, A_S, A_T ) );
     
 end );
@@ -251,7 +255,7 @@ InstallMethodWithCache( OrlikSolomonSpaceOfFlat,
         
   function( matroid, X )
     
-    return Source( OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( matroid, X, DirectSum( Qmat, OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X ) ) ) );
+    return Source( OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( matroid, X, DirectSum( kmat, OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X ) ) ) );
     
 end );
 
@@ -265,9 +269,9 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
     rkX := RankFunction( source_matroid )( X );
     
     if rkX = 0 then
-        return IdentityMorphism( Qmat, TensorUnit( Qmat ) );
+        return IdentityMorphism( kmat, TensorUnit( kmat ) );
     elif rkX = 1 then
-        return IdentityMorphism( Qmat, TensorUnit( Qmat ) );
+        return IdentityMorphism( kmat, TensorUnit( kmat ) );
     fi;
     
     ## f(X)
@@ -282,7 +286,7 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
     A_target_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( target_matroid, fX );
     
     ##
-    A_target_S := DirectSum( Qmat, A_target_Ss );
+    A_target_S := DirectSum( kmat, A_target_Ss );
     
     g :=
       function( S_ )
@@ -298,23 +302,23 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
         
         ## f(S') = f(X)?
         if fS_ = fX then
-            return PreCompose( Qmat,
+            return PreCompose( kmat,
                            ## here: A_{f(S')} = A_{f(X)}
                            mor,
                            ## ⨁_{S ≤₁ f(X)} A_S ↩ A_{f(X)}
                            OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( target_matroid, fX, A_target_S ) );
         fi;
 
-        return PreCompose( Qmat,
+        return PreCompose( kmat,
                        mor,
-                       InjectionOfCofactorOfDirectSumWithGivenDirectSum( Qmat,
+                       InjectionOfCofactorOfDirectSumWithGivenDirectSum( kmat,
                                A_target_Ss,
                                SafePosition( target_Ss, fS_ ),
                                A_target_S ) );
         
     end;
     
-    return UniversalMorphismFromDirectSumWithGivenDirectSum( Qmat,
+    return UniversalMorphismFromDirectSumWithGivenDirectSum( kmat,
                    A_source_Ss,
                    A_source_S,
                    List( source_Ss, g ),
@@ -332,20 +336,20 @@ InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects,
     rkX := RankFunction( source_matroid )( X );
     
     if rkX = 0 then
-        return IdentityMorphism( Qmat, TensorUnit( Qmat ) );
+        return IdentityMorphism( kmat, TensorUnit( kmat ) );
     elif rkX = 1 then
-        return IdentityMorphism( Qmat, TensorUnit( Qmat ) );
+        return IdentityMorphism( kmat, TensorUnit( kmat ) );
     fi;
     
     ## f(X)
     fX := Set( f{X} );
     
-    return KernelObjectFunctorialWithGivenKernelObjects( Qmat,
+    return KernelObjectFunctorialWithGivenKernelObjects( kmat,
                    A_X,
                    OrlikSolomonLastButOneCodifferentialOfLocalization( source_matroid, X ),
                    OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, X, f,
-                           DirectSum( Qmat, OrlikSolomonSpacesOfCorankOneOfFlat( source_matroid, X ) ),
-                           DirectSum( Qmat, OrlikSolomonSpacesOfCorankOneOfFlat( target_matroid, fX ) ) ),
+                           DirectSum( kmat, OrlikSolomonSpacesOfCorankOneOfFlat( source_matroid, X ) ),
+                           DirectSum( kmat, OrlikSolomonSpacesOfCorankOneOfFlat( target_matroid, fX ) ) ),
                    OrlikSolomonLastButOneCodifferentialOfLocalization( target_matroid, fX ),
                    A_fX );
     
@@ -378,8 +382,8 @@ muL := MoebiusFunction( L );
 W := AutomorphismGroup( L );
 Display( CharacterTable( W ) );
 
-Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> Dimension( OrlikSolomonSpaceOfFlat( L, X ) ) = AbsInt( muL( X ) ) ) );
-Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> Dimension( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, X, GroundSet( L ) ) ) ) = AbsInt( muL( X ) ) ) );
+Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> ObjectDatum( OrlikSolomonSpaceOfFlat( L, X ) ) = AbsInt( muL( X ) ) ) );
+Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> ObjectDatum( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, X, GroundSet( L ) ) ) ) = AbsInt( muL( X ) ) ) );
 
 OrbsL := SortedList( Orbits( W, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
 TL := List( OrbsL, O -> O[1] );
