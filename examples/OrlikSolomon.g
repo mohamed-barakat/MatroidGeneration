@@ -2,10 +2,10 @@ LoadPackage( "alcove", ">= 2023.09-02" );
 LoadPackage( "LinearAlgebraForCAP" );
 LoadPackage( "FinSetsForCAP" );
 
-ZZ := HomalgRingOfIntegers( );
+zz := HomalgRingOfIntegers( );
 QQ := HomalgFieldOfRationals( );
 
-Zmat := CategoryOfRows( ZZ );
+Zmat := CategoryOfRows( zz );
 Qmat := MatrixCategory( QQ );
 
 kmat := Qmat;
