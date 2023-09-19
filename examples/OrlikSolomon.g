@@ -89,7 +89,7 @@ DeclareOperation( "OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects",
 DeclareOperation( "OrlikSolomonMorphismBetweenSpacesOfFlats",
         [ IsMatroid, IsMatroid, IsList, IsList ] );
 
-## { A_S }_{S ≤₁ X}
+## { OS_S }_{S ≤₁ X}
 InstallMethodWithCache( OrlikSolomonFlatsOfCorankOneOfFlat,
         [ IsMatroid, IsList ],
         
@@ -106,7 +106,7 @@ InstallMethodWithCache( OrlikSolomonFlatsOfCorankOneOfFlat,
     
 end );
 
-## { A_T }_{T ≤₂ X}
+## { OS_T }_{T ≤₂ X}
 InstallMethodWithCache( OrlikSolomonFlatsOfCorankTwoOfFlat,
         [ IsMatroid, IsList ],
         
@@ -123,7 +123,7 @@ InstallMethodWithCache( OrlikSolomonFlatsOfCorankTwoOfFlat,
     
 end );
 
-## ⨁_{S ≤₁ X} A_S
+## ⨁_{S ≤₁ X} OS_S
 InstallMethodWithCache( OrlikSolomonSpacesOfCorankOneOfFlat,
         [ IsMatroid, IsList ],
         
@@ -140,7 +140,7 @@ InstallMethodWithCache( OrlikSolomonSpacesOfCorankOneOfFlat,
     
 end );
 
-## ⨁_{T ≤₂ X} A_T
+## ⨁_{T ≤₂ X} OS_T
 InstallMethodWithCache( OrlikSolomonSpacesOfCorankTwoOfFlat,
         [ IsMatroid, IsList ],
         
@@ -157,12 +157,12 @@ InstallMethodWithCache( OrlikSolomonSpacesOfCorankTwoOfFlat,
     
 end );
 
-## d_{X,S}: A_S ← A_X
+## d_{X,S}: OS_S ← OS_X
 InstallMethodWithCache( OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenObjects,
         [ IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
-  function( matroid, X, S, A_X, A_S )
-    local Ss, k, A_Ss;
+  function( matroid, X, S, OS_X, OS_S )
+    local Ss, k, OS_Ss;
     
     Ss := OrlikSolomonFlatsOfCorankOneOfFlat( matroid, X );
     
@@ -171,26 +171,26 @@ InstallMethodWithCache( OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenOb
     if k = fail then
         
         return ZeroMorphism( kmat,
-                       A_X,
-                       A_S );
+                       OS_X,
+                       OS_S );
         
     fi;
     
-    A_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X );
+    OS_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X );
     
     return ComponentOfMorphismIntoDirectSum( kmat,
-                   OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( matroid, X, DirectSum( kmat, A_Ss ) ),
-                   A_Ss,
+                   OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( matroid, X, DirectSum( kmat, OS_Ss ) ),
+                   OS_Ss,
                    k );
     
 end );
 
-## ⨁_{T ≤₂ X} A_T ← ⨁_{S ≤₁ X} A_S
+## ⨁_{T ≤₂ X} OS_T ← ⨁_{S ≤₁ X} OS_S
 InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalizationWithGivenObjects,
         [ IsMatroid, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
-  function( matroid, X, A_S, A_T )
-    local rkX, Ss, Ts, A_Ss, A_Ts;
+  function( matroid, X, OS_S, OS_T )
+    local rkX, Ss, Ts, OS_Ss, OS_Ts;
     
     rkX := RankFunction( matroid )( X );
     
@@ -201,21 +201,21 @@ InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalizationWithGi
     Ss := OrlikSolomonFlatsOfCorankOneOfFlat( matroid, X );
     Ts := OrlikSolomonFlatsOfCorankTwoOfFlat( matroid, X );
     
-    A_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X );
-    A_Ts := OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X );
+    OS_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( matroid, X );
+    OS_Ts := OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X );
     
     return MorphismBetweenDirectSumsWithGivenDirectSums( kmat,
-                   A_S,
-                   A_Ss,
+                   OS_S,
+                   OS_Ss,
                    List( [ 1 .. Length( Ss ) ], s ->
                          List( [ 1 .. Length( Ts ) ], t ->
-                               OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenObjects( matroid, Ss[s], Ts[t], A_Ss[s], A_Ts[t] ) ) ),
-                   A_Ts,
-                   A_T );
+                               OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenObjects( matroid, Ss[s], Ts[t], OS_Ss[s], OS_Ts[t] ) ) ),
+                   OS_Ts,
+                   OS_T );
     
 end );
 
-## ⨁_{T ≤₂ X} A_T ← ⨁_{S ≤₁ X} A_S
+## ⨁_{T ≤₂ X} OS_T ← ⨁_{S ≤₁ X} OS_S
 InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalization,
         [ IsMatroid, IsList ],
         
@@ -227,12 +227,12 @@ InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalization,
     
 end );
 
-## ⨁_{S ≤₁ X} A_S ↩ A_X
+## ⨁_{S ≤₁ X} OS_S ↩ OS_X
 InstallMethodWithCache( OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange,
         [ IsMatroid, IsList, IsCapCategoryObject ],
         
-  function( matroid, X, A_S )
-    local rkX, A_T;
+  function( matroid, X, OS_S )
+    local rkX, OS_T;
     
     rkX := RankFunction( matroid )( X );
     
@@ -242,14 +242,14 @@ InstallMethodWithCache( OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange,
         return IdentityMorphism( kmat, TensorUnit( kmat ) );
     fi;
     
-    A_T := DirectSum( kmat, OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X ) );
+    OS_T := DirectSum( kmat, OrlikSolomonSpacesOfCorankTwoOfFlat( matroid, X ) );
     
     return WeakKernelEmbedding( kmat,
-                   OrlikSolomonLastButOneCodifferentialOfLocalizationWithGivenObjects( matroid, X, A_S, A_T ) );
+                   OrlikSolomonLastButOneCodifferentialOfLocalizationWithGivenObjects( matroid, X, OS_S, OS_T ) );
     
 end );
 
-## A_X
+## OS_X
 InstallMethodWithCache( OrlikSolomonSpaceOfFlat,
         [ IsMatroid, IsList ],
         
@@ -259,12 +259,12 @@ InstallMethodWithCache( OrlikSolomonSpaceOfFlat,
     
 end );
 
-## ⨁_{S' ≤₁ X} A_S' → ⨁_{S ≤₁ f(X)} A_S
+## ⨁_{S' ≤₁ X} OS_S' → ⨁_{S ≤₁ f(X)} OS_S
 InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithGivenObjects,
         [ IsMatroid, IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
-  function( source_matroid, target_matroid, X, f, A_source_S, A_target_S )
-    local rkX, fX, rkfX, source_Ss, target_Ss, A_source_Ss, A_target_Ss, g;
+  function( source_matroid, target_matroid, X, f, OS_source_S, OS_target_S )
+    local rkX, fX, rkfX, source_Ss, target_Ss, OS_source_Ss, OS_target_Ss, g;
     
     rkX := RankFunction( source_matroid )( X );
     
@@ -282,11 +282,11 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
     source_Ss := OrlikSolomonFlatsOfCorankOneOfFlat( source_matroid, X );
     target_Ss := OrlikSolomonFlatsOfCorankOneOfFlat( target_matroid, fX );
     
-    A_source_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( source_matroid, X );
-    A_target_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( target_matroid, fX );
+    OS_source_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( source_matroid, X );
+    OS_target_Ss := OrlikSolomonSpacesOfCorankOneOfFlat( target_matroid, fX );
     
     ##
-    A_target_S := DirectSum( kmat, A_target_Ss );
+    OS_target_S := DirectSum( kmat, OS_target_Ss );
     
     g :=
       function( S_ )
@@ -295,7 +295,7 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
         ## f(S')
         fS_ := Set( f{S_} );
         
-        ## A_{S'} → A_{f(S')}
+        ## OS_{S'} → OS_{f(S')}
         mor := OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, S_, f,
                        OrlikSolomonSpaceOfFlat( source_matroid, S_ ),
                        OrlikSolomonSpaceOfFlat( target_matroid, fS_ ) );
@@ -303,34 +303,34 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
         ## f(S') = f(X)?
         if fS_ = fX then
             return PreCompose( kmat,
-                           ## here: A_{f(S')} = A_{f(X)}
+                           ## here: OS_{f(S')} = OS_{f(X)}
                            mor,
-                           ## ⨁_{S ≤₁ f(X)} A_S ↩ A_{f(X)}
-                           OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( target_matroid, fX, A_target_S ) );
+                           ## ⨁_{S ≤₁ f(X)} OS_S ↩ OS_{f(X)}
+                           OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( target_matroid, fX, OS_target_S ) );
         fi;
 
         return PreCompose( kmat,
                        mor,
                        InjectionOfCofactorOfDirectSumWithGivenDirectSum( kmat,
-                               A_target_Ss,
+                               OS_target_Ss,
                                SafePosition( target_Ss, fS_ ),
-                               A_target_S ) );
+                               OS_target_S ) );
         
     end;
     
     return UniversalMorphismFromDirectSumWithGivenDirectSum( kmat,
-                   A_source_Ss,
-                   A_source_S,
+                   OS_source_Ss,
+                   OS_source_S,
                    List( source_Ss, g ),
-                   A_target_S );
+                   OS_target_S );
     
 end );
 
-## A(f): A_X(L') → A_f(X)(L)
+## OS(f): OS_X(L') → OS_f(X)(L)
 InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects,
         [ IsMatroid, IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
-  function( source_matroid, target_matroid, X, f, A_X, A_fX )
+  function( source_matroid, target_matroid, X, f, OS_X, OS_fX )
     local rkX, fX;
     
     rkX := RankFunction( source_matroid )( X );
@@ -345,17 +345,17 @@ InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects,
     fX := Set( f{X} );
     
     return KernelObjectFunctorialWithGivenKernelObjects( kmat,
-                   A_X,
+                   OS_X,
                    OrlikSolomonLastButOneCodifferentialOfLocalization( source_matroid, X ),
                    OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, X, f,
                            DirectSum( kmat, OrlikSolomonSpacesOfCorankOneOfFlat( source_matroid, X ) ),
                            DirectSum( kmat, OrlikSolomonSpacesOfCorankOneOfFlat( target_matroid, fX ) ) ),
                    OrlikSolomonLastButOneCodifferentialOfLocalization( target_matroid, fX ),
-                   A_fX );
+                   OS_fX );
     
 end );
 
-## A(f): A_X(L') → A_f(X)(L)
+## OS(f): OS_X(L') → OS_f(X)(L)
 InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlats,
         [ IsMatroid, IsMatroid, IsList, IsList ],
         
@@ -385,8 +385,8 @@ Display( CharacterTable( W ) );
 Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> ObjectDatum( OrlikSolomonSpaceOfFlat( L, X ) ) = AbsInt( muL( X ) ) ) );
 Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> ObjectDatum( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, X, GroundSet( L ) ) ) ) = AbsInt( muL( X ) ) ) );
 
-OrbsL := SortedList( Orbits( W, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
-TL := List( OrbsL, O -> O[1] );
-StabsL := List( TL, X -> Stabilizer( W, X, OnSets ) );
-WsL := List( [ 1 .. Length( TL ) ], k -> Group( List( GeneratorsOfGroup( StabsL[k] ), pi -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, TL[k], ListPerm( pi, n ) ) ) ) ) ) );
-IndsL := List( [ 1 .. Length( TL ) ], k -> List( ConstituentsOfCharacter( InducedClassFunction( RestrictedClassFunction( NaturalCharacter( WsL[k] ), GroupHomomorphismByImages( StabsL[k], WsL[k] ) ), W ) ), ValuesOfClassFunction ) );
+OsL := SortedList( Orbits( W, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
+XsL := List( OsL, O -> O[1] );
+GXsL := List( XsL, X -> Stabilizer( W, X, OnSets ) );
+OSXsL := List( [ 1 .. Length( XsL ) ], k -> Group( List( GeneratorsOfGroup( GXsL[k] ), pi -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, XsL[k], ListPerm( pi, n ) ) ) ) ) ) );
+OSOsL := List( [ 1 .. Length( XsL ) ], k -> List( ConstituentsOfCharacter( InducedClassFunction( RestrictedClassFunction( NaturalCharacter( OSXsL[k] ), GroupHomomorphismByImages( GXsL[k], OSXsL[k] ) ), W ) ), ValuesOfClassFunction ) );
