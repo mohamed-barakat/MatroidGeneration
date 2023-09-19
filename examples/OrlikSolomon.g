@@ -1,6 +1,6 @@
 LoadPackage( "alcove", ">= 2023.09-02" );
 LoadPackage( "LinearAlgebraForCAP" );
-LoadPackage( "FinSetsForCAP" );
+#LoadPackage( "FinSetsForCAP" );
 
 zz := HomalgRingOfIntegers( );
 QQ := HomalgFieldOfRationals( );
