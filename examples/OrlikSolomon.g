@@ -379,14 +379,14 @@ n := Length( GroundSet( L ) );
 Assert( 0, n = Binomial( r + 1, 2 ) );
 rkL := RankFunction( L );
 muL := MoebiusFunction( L );
-W := AutomorphismGroup( L );
-Display( CharacterTable( W ) );
+G := AutomorphismGroup( L );
+Display( CharacterTable( G ) );
 
 Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> ObjectDatum( OrlikSolomonSpaceOfFlat( L, X ) ) = AbsInt( muL( X ) ) ) );
 Assert( 0, ForAll( Concatenation( Flats( L ) ), X -> ObjectDatum( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, X, GroundSet( L ) ) ) ) = AbsInt( muL( X ) ) ) );
 
-OsL := SortedList( Orbits( W, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
+OsL := SortedList( Orbits( G, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
 XsL := List( OsL, O -> O[1] );
-GXsL := List( XsL, X -> Stabilizer( W, X, OnSets ) );
+GXsL := List( XsL, X -> Stabilizer( G, X, OnSets ) );
 OSXsL := List( [ 1 .. Length( XsL ) ], k -> Group( List( GeneratorsOfGroup( GXsL[k] ), pi -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, XsL[k], ListPerm( pi, n ) ) ) ) ) ) );
-OSOsL := List( [ 1 .. Length( XsL ) ], k -> List( ConstituentsOfCharacter( InducedClassFunction( RestrictedClassFunction( NaturalCharacter( OSXsL[k] ), GroupHomomorphismByImages( GXsL[k], OSXsL[k] ) ), W ) ), ValuesOfClassFunction ) );
+OSOsL := List( [ 1 .. Length( XsL ) ], k -> List( ConstituentsOfCharacter( InducedClassFunction( RestrictedClassFunction( NaturalCharacter( OSXsL[k] ), GroupHomomorphismByImages( GXsL[k], OSXsL[k] ) ), G ) ), ValuesOfClassFunction ) );
