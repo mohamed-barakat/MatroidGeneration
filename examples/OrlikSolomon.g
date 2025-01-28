@@ -83,11 +83,11 @@ DeclareOperation( "OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsW
         [ IsMatroid, IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Arguments source_matroid, target_matroid, flat, map, source, range
-DeclareOperation( "OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects",
+DeclareOperation( "MorphismBetweenOrlikSolomonSpacesOfFlatsWithGivenObjects",
         [ IsMatroid, IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Arguments source_matroid, target_matroid, flat, map
-DeclareOperation( "OrlikSolomonMorphismBetweenSpacesOfFlats",
+DeclareOperation( "MorphismBetweenOrlikSolomonSpacesOfFlats",
         [ IsMatroid, IsMatroid, IsList, IsList ] );
 
 ## { OS_S }_{S ≤₁ X}
@@ -297,7 +297,7 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
         fS_ := Set( f{S_} );
         
         ## OS_{S'} → OS_{f(S')}
-        mor := OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, S_, f,
+        mor := MorphismBetweenOrlikSolomonSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, S_, f,
                        OrlikSolomonSpaceOfFlat( source_matroid, S_ ),
                        OrlikSolomonSpaceOfFlat( target_matroid, fS_ ) );
         
@@ -328,7 +328,7 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
 end );
 
 ## OS(f): OS_X(L') → OS_f(X)(L)
-InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects,
+InstallMethod( MorphismBetweenOrlikSolomonSpacesOfFlatsWithGivenObjects,
         [ IsMatroid, IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
   function( source_matroid, target_matroid, X, f, OS_X, OS_fX )
@@ -357,7 +357,7 @@ InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects,
 end );
 
 ## OS(f): OS_X(L') → OS_f(X)(L)
-InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlats,
+InstallMethod( MorphismBetweenOrlikSolomonSpacesOfFlats,
         [ IsMatroid, IsMatroid, IsList, IsList ],
         
   function( source_matroid, target_matroid, X, f )
@@ -366,7 +366,7 @@ InstallMethod( OrlikSolomonMorphismBetweenSpacesOfFlats,
     ## f(X)
     fX := Set( f{X} );
     
-    return OrlikSolomonMorphismBetweenSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, X, f,
+    return MorphismBetweenOrlikSolomonSpacesOfFlatsWithGivenObjects( source_matroid, target_matroid, X, f,
                    OrlikSolomonSpaceOfFlat( source_matroid, X ),
                    OrlikSolomonSpaceOfFlat( target_matroid, fX ) );
     
@@ -384,10 +384,10 @@ G := AutomorphismGroup( L );
 Display( CharacterTable( G ) );
 
 Assert( 0, ForAll( Concatenation( Flats( L ) ), F -> ObjectDatum( OrlikSolomonSpaceOfFlat( L, F ) ) = AbsInt( muL( F ) ) ) );
-Assert( 0, ForAll( Concatenation( Flats( L ) ), F -> ObjectDatum( Source( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, F, GroundSet( L ) ) ) ) = AbsInt( muL( F ) ) ) );
+Assert( 0, ForAll( Concatenation( Flats( L ) ), F -> ObjectDatum( Source( MorphismBetweenOrlikSolomonSpacesOfFlats( L, L, F, GroundSet( L ) ) ) ) = AbsInt( muL( F ) ) ) );
 
 OsL := SortedList( Orbits( G, Concatenation( Flats( L ) ), OnSets ), {a,b} -> Length(a[1]) < Length(b[1]) );
 FsL := List( OsL, O -> O[1] );
 GFsL := List( FsL, F -> Stabilizer( G, F, OnSets ) );
-OSFsL := List( [ 1 .. Length( FsL ) ], k -> Group( List( GeneratorsOfGroup( GFsL[k] ), pi -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( OrlikSolomonMorphismBetweenSpacesOfFlats( L, L, FsL[k], ListPerm( pi, n ) ) ) ) ) ) );
+OSFsL := List( [ 1 .. Length( FsL ) ], k -> Group( List( GeneratorsOfGroup( GFsL[k] ), pi -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( MorphismBetweenOrlikSolomonSpacesOfFlats( L, L, FsL[k], ListPerm( pi, n ) ) ) ) ) ) );
 OSOsL := List( [ 1 .. Length( FsL ) ], k -> List( ConstituentsOfCharacter( InducedClassFunction( RestrictedClassFunction( NaturalCharacter( OSFsL[k] ), GroupHomomorphismByImages( GFsL[k], OSFsL[k] ) ), G ) ), ValuesOfClassFunction ) );
