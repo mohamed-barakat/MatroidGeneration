@@ -51,6 +51,8 @@ end;
 #    
 #end;
 
+## using the functoriality of OS we can compute the action of the stabilizer of X on OS_X, see MorphismBetweenOrlikSolomonSpacesOfFlats
+
 DeclareOperation( "OrlikSolomonFlatsOfCorankOneOfFlat",
         [ IsMatroid, IsList ] );
 
@@ -90,7 +92,7 @@ DeclareOperation( "MorphismBetweenOrlikSolomonSpacesOfFlatsWithGivenObjects",
 DeclareOperation( "MorphismBetweenOrlikSolomonSpacesOfFlats",
         [ IsMatroid, IsMatroid, IsList, IsList ] );
 
-## { OS_S }_{S ≤₁ X}
+## { S | S ≤₁ X }
 InstallMethodWithCache( OrlikSolomonFlatsOfCorankOneOfFlat,
         [ IsMatroid, IsList ],
         
@@ -107,7 +109,7 @@ InstallMethodWithCache( OrlikSolomonFlatsOfCorankOneOfFlat,
     
 end );
 
-## { OS_T }_{T ≤₂ X}
+## { T | T ≤₂ X }
 InstallMethodWithCache( OrlikSolomonFlatsOfCorankTwoOfFlat,
         [ IsMatroid, IsList ],
         
@@ -124,7 +126,7 @@ InstallMethodWithCache( OrlikSolomonFlatsOfCorankTwoOfFlat,
     
 end );
 
-## ⨁_{S ≤₁ X} OS_S
+## { OS_S | S ≤₁ X }
 InstallMethodWithCache( OrlikSolomonSpacesOfCorankOneOfFlat,
         [ IsMatroid, IsList ],
         
@@ -141,7 +143,7 @@ InstallMethodWithCache( OrlikSolomonSpacesOfCorankOneOfFlat,
     
 end );
 
-## ⨁_{T ≤₂ X} OS_T
+## { OS_T | T ≤₂ X }
 InstallMethodWithCache( OrlikSolomonSpacesOfCorankTwoOfFlat,
         [ IsMatroid, IsList ],
         
@@ -158,7 +160,7 @@ InstallMethodWithCache( OrlikSolomonSpacesOfCorankTwoOfFlat,
     
 end );
 
-## d_{X,S}: OS_S ← OS_X
+## ∂_{X,S}: OS_S ← OS_X
 InstallMethodWithCache( OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenObjects,
         [ IsMatroid, IsList, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
@@ -186,7 +188,7 @@ InstallMethodWithCache( OrlikSolomonCodifferentialBetweenAPairOfFlatsWithGivenOb
     
 end );
 
-## ⨁_{T ≤₂ X} OS_T ← ⨁_{S ≤₁ X} OS_S
+## ∂_X: ⨁_{T ≤₂ X} OS_T ← ⨁_{S ≤₁ X} OS_S
 InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalizationWithGivenObjects,
         [ IsMatroid, IsList, IsCapCategoryObject, IsCapCategoryObject ],
         
@@ -216,7 +218,7 @@ InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalizationWithGi
     
 end );
 
-## ⨁_{T ≤₂ X} OS_T ← ⨁_{S ≤₁ X} OS_S
+## ∂_X: ⨁_{T ≤₂ X} OS_T ← ⨁_{S ≤₁ X} OS_S
 InstallMethodWithCache( OrlikSolomonLastButOneCodifferentialOfLocalization,
         [ IsMatroid, IsList ],
         
@@ -309,7 +311,7 @@ InstallMethod( OrlikSolomonMorphismBetweenDirectSumOfCorankOneSpacesOfFlatsWithG
                            ## ⨁_{S ≤₁ f(X)} OS_S ↩ OS_{f(X)}
                            OrlikSolomonEmbeddingOfSpaceOfFlatWithGivenRange( target_matroid, fX, OS_target_S ) );
         fi;
-
+        
         return PreCompose( kmat,
                        mor,
                        InjectionOfCofactorOfDirectSumWithGivenDirectSum( kmat,
